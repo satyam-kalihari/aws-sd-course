@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/aws-zoo-project/aws-zoo-project.iml" filepath="$PROJECT_DIR$/aws-zoo-project/aws-zoo-project.iml" />
       <module fileurl="file://$PROJECT_DIR$/aws_FileHandling/aws_FileHandling.iml" filepath="$PROJECT_DIR$/aws_FileHandling/aws_FileHandling.iml" />
       <module fileurl="file://$PROJECT_DIR$/aws_java/aws_java.iml" filepath="$PROJECT_DIR$/aws_java/aws_java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/aws_linkedList/aws_linkedList.iml" filepath="$PROJECT_DIR$/aws_linkedList/aws_linkedList.iml" />
     </modules>
   </component>
 </project>
