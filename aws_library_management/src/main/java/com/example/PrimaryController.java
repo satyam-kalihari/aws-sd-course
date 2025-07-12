@@ -3,6 +3,8 @@ package com.example;
 import java.sql.Date;
 import java.sql.SQLException;
 
+import javafx.beans.binding.Bindings;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,7 +38,20 @@ public class PrimaryController extends DatabaseHandler {
         issuedBy.setCellValueFactory(new PropertyValueFactory<>("issuedBy"));
         issuedDate.setCellValueFactory(new PropertyValueFactory<>("issuedDate"));
 
-        bookTable.setItems(getAllBookData());
+        // bookTable.setItems(getAllBookData());
+        FilteredList<Book> filteredData = new FilteredList<>(getAllBookData(), p -> true);
+        filteredData.predicateProperty().bind(Bindings.createObjectBinding(() -> {
+            String textSearch = searchText.getText();
+
+            if(textSearch == null){
+                return persion->true;
+            }
+
+            String lowercaseSearchText = textSearch.toLowerCase();
+            return persion-> persion.getbookName().toLowerCase().contains(lowercaseSearchText);
+        }, searchText.textProperty()));
+
+        bookTable.setItems(filteredData);
     }
 
 }
