@@ -42,19 +42,19 @@ public class Book {
         return issuedDate.get();
     }
 
-    public StringProperty getBookName() {
+    public StringProperty bookNameProperty() {
         return bookName;
     }
 
-    public StringProperty getAuthName() {
+    public StringProperty authNameProperty() {
         return authName;
     }
 
-    public StringProperty getIssuedBy() {
+    public StringProperty issuedByProperty() {
         return issuedBy;
     }
 
-    public ObjectProperty<Date> getIssuedDate() {
+    public ObjectProperty<Date> issuedDateProperty() {
         return issuedDate;
     }
 
