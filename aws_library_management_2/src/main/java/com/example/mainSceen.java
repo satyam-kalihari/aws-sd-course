@@ -1,13 +1,17 @@
 package com.example;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import javafx.beans.binding.Bindings;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -46,12 +50,6 @@ public class mainSceen extends DatabaseHandler {
     private TableColumn<Book, Date> dueDate;
 
     @FXML
-    private TextField dueDateTextArea;
-
-    @FXML
-    private TextField issuedDateTextArea;
-
-    @FXML
     private TableColumn<Book, Date> issuedOn;
 
     @FXML
@@ -79,6 +77,12 @@ public class mainSceen extends DatabaseHandler {
     private TextField userNameTextArea;
 
     @FXML
+    private DatePicker dueDateTextArea;
+
+    @FXML
+    private DatePicker issuedDateTextArea;
+
+    @FXML
     public void initialize() throws SQLException{
         bookId.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         bookName.setCellValueFactory(new PropertyValueFactory<>("bookName"));
@@ -89,6 +93,10 @@ public class mainSceen extends DatabaseHandler {
         returned.setCellValueFactory(new PropertyValueFactory<>("returned"));
         paid.setCellValueFactory(new PropertyValueFactory<>("paid"));
 
+        refreshTable();
+    }
+
+    public void refreshTable() throws SQLException{
         FilteredList<Book> filteredData = new FilteredList<>(getAllBooks(), p -> true);
         filteredData.predicateProperty().bind(Bindings.createObjectBinding(() -> {
             String searchText = searchBox.getText();
@@ -106,7 +114,34 @@ public class mainSceen extends DatabaseHandler {
     }
 
     @FXML
-    void addData(ActionEvent event) {
+    void addData(ActionEvent event) throws SQLException {
+        String bookName = bookNameTextArea.getText();
+        String authorName = authorNameTextArea.getText();
+        String user = userNameTextArea.getText();
+        LocalDate issuedDate = issuedDateTextArea.getValue();
+        LocalDate dueDate = dueDateTextArea.getValue();
+        String returned = returnedTextField.getText();
+        String paid = amountTextArea.getText();
+
+        String query = "INSERT INTO Book(bookName, authorName, user, issuedDate, dueDate, returned, paid ) VALUES (?, ?, ?, ?, ?, ? ,?)";
+
+        try(Connection conn = connectToDatabase()){
+            PreparedStatement pstmt =conn.prepareStatement(query);
+
+            pstmt.setString(1, bookName);
+            pstmt.setString(2, authorName);
+            pstmt.setString(3, user);
+            pstmt.setDate(4, Date.valueOf(issuedDate));
+            pstmt.setDate(5, Date.valueOf(dueDate));
+            pstmt.setString(6, returned);
+            pstmt.setInt(7, Integer.valueOf(paid));
+
+            pstmt.executeUpdate();
+
+            refreshTable();
+        }catch(SQLException e){
+            System.out.println();
+        }
 
     }
 
