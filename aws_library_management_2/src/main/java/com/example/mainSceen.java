@@ -186,12 +186,62 @@ public class mainSceen extends DatabaseHandler {
         returnedTextField.setText(selectedBook.getReturned());
         // mainSceen.java, line 159
         amountTextArea.setText(String.valueOf(selectedBook.getPaid()));
-        
+
     }
 
     @FXML
     void updateData(ActionEvent event) {
 
+        Book selectedBook = bookData.getSelectionModel().getSelectedItem();
+
+        String bookName = bookNameTextArea.getText();
+        String authorName = authorNameTextArea.getText();
+        String user = userNameTextArea.getText();
+        LocalDate issuedDate = issuedDateTextArea.getValue();
+        LocalDate dueDate = dueDateTextArea.getValue();
+        String returned = returnedTextField.getText();
+        String paid = amountTextArea.getText();
+
+        String query = "UPDATE Book " + //
+                        "SET " + //
+                        "bookName = ?, " + //
+                        "authorName = ?, " + //
+                        "user = ?, " + //
+                        "issuedDate = ?, " + //
+                        "dueDate = ?, " + //
+                        "returned = ?, " + //
+                        "paid = ? " + //
+                        "WHERE " + //
+                        "bookId = ?;";
+        
+        if (selectedBook.getBookName() != null) {
+            try(Connection conn = connectToDatabase()) {
+
+            PreparedStatement pstmt = conn.prepareStatement(query);
+
+            pstmt.setString(1, bookName);
+            pstmt.setString(2, authorName);
+            pstmt.setString(3, user);
+            pstmt.setDate(4, Date.valueOf(issuedDate));
+            pstmt.setDate(5, Date.valueOf(dueDate));
+            pstmt.setString(6, returned);
+            pstmt.setInt(7, Integer.valueOf(paid));
+            pstmt.setInt(8, selectedBook.getBookId());
+
+            int result = pstmt.executeUpdate();
+            if (result == 1) {
+                System.out.println("Updated successfully");
+            }
+
+            refreshTable();
+
+        } catch (SQLException e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        }
+
+        
     }
 
 }
