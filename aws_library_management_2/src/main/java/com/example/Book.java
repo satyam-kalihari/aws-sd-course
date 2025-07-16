@@ -75,9 +75,9 @@ public class Book {
         return bookName;
     }
     public StringProperty authorNameProperty(){
-        return bookName;
+        return authorName;
     }public StringProperty userProperty(){
-        return bookName;
+        return user;
     }
     public ObjectProperty<Date> issuedDateProperty(){
         return issuedDate;

@@ -147,7 +147,40 @@ public class mainSceen extends DatabaseHandler {
 
     @FXML
     void deleteData(ActionEvent event) {
+        try {
+            Book selectedBook = bookData.getSelectionModel().getSelectedItem();
+            
+            bookNameTextArea.setText(selectedBook.getBookName());
+            authorNameTextArea.setText(selectedBook.getAuthorName());
+            userNameTextArea.setText(selectedBook.getUser());
+            issuedDateTextArea.setValue(selectedBook.getIssuedDate().toLocalDate());
+            dueDateTextArea.setValue(selectedBook.getDueDate().toLocalDate());
+            returnedTextField.setText(selectedBook.getReturned());
+            // mainSceen.java, line 159
+            amountTextArea.setText(String.valueOf(selectedBook.getPaid()));
 
+            String query = "DELETE FROM Book WHERE bookId = ?;";
+
+            try(Connection conn = connectToDatabase()){
+                PreparedStatement pstmt = conn.prepareStatement(query);
+
+                pstmt.setInt(1, selectedBook.getBookId());
+
+                int result = pstmt.executeUpdate();
+
+                if (result == 1) {
+                    System.out.println("Book deleted");
+                }
+
+                refreshTable();
+            }catch(SQLException e){
+                System.out.println(e.getNextException());
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @FXML
